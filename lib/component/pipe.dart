@@ -7,7 +7,10 @@ class Pipe extends PositionComponent {
   late Sprite _pipeStripe;
   final bool isFlipped;
 
-  Pipe({required this.isFlipped, required super.position });
+  Pipe({required this.isFlipped, required super.position})
+      : super(
+          priority: 2,
+        );
 
   @override
   Future<void> onLoad() async {
@@ -16,9 +19,9 @@ class Pipe extends PositionComponent {
     _pipeStripe = await Sprite.load('pipe.png');
     anchor = Anchor.topCenter;
     final ratio = _pipeStripe.srcSize.y / _pipeStripe.srcSize.x;
-    const width = 95.0;
+    const width = 100.0;
     size = Vector2(width, width * ratio);
-    if(isFlipped){
+    if (isFlipped) {
       flipVertically();
     }
   }

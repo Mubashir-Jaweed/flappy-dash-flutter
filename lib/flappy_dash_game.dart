@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
@@ -41,30 +42,44 @@ class FlappyDashGame extends FlameGame<FlappyDashWorld> with KeyboardEvents {
   }
 }
 
-class FlappyDashWorld extends World with TapCallbacks {
+class FlappyDashWorld extends World with TapCallbacks, HasGameRef<FlappyDashGame> {
   late Dash _dash;
+  late PipePair _lastPipe;
+  static const _pipesDistance = 400.0;
 
   @override
   void onLoad() {
     super.onLoad();
     add(DashParallaxBackground());
     add(_dash = Dash());
-    add(
-      PipePair(
-        position: Vector2(0, 0),
-      ),
-    );
-    add(
-      PipePair(
-        position: Vector2(300, -200),
-      ),
-    );
-    add(
-      PipePair(
-        position: Vector2(600, 200),
-      ),
-    );
+    _generatePipes();
   }
+
+  void _generatePipes({
+    int count = 5,
+    double fromX = 400.0,
+  }) {
+    for (int i = 0; i < count; i++) {
+      const area = 600;
+      final y = (Random().nextDouble() * area) - (area / 2);
+
+      add(
+        _lastPipe = PipePair(
+          position: Vector2(fromX + (i * _pipesDistance), y),
+        ),
+      );
+    }
+  }
+
+  void _removePipes() {
+    final pipes = children.whereType<PipePair>();
+    final shouldBeRemoved = max(pipes.length -5  , 0);
+    pipes.take(shouldBeRemoved).forEach((pipe){
+      pipe.removeFromParent();
+    });
+    print(pipes.length);
+  }
+
 
   @override
   void onTapDown(TapDownEvent event) {
@@ -76,4 +91,18 @@ class FlappyDashWorld extends World with TapCallbacks {
   void onSpaceDown() {
     _dash.jump();
   }
+
+  @override
+  void update(double dt) {
+    // TODO: implement update
+    super.update(dt);
+    if(_dash.x >= _lastPipe.x){
+      _generatePipes(
+        fromX: _pipesDistance
+      );
+      _removePipes();
+    }
+    // game.camera.viewfinder.zoom = 0.05;
+  }
+  
 }

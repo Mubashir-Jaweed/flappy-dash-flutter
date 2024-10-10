@@ -3,18 +3,21 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class Dash extends PositionComponent {
   Dash()
       : super(
-            position: Vector2(0, 0),
-            size: Vector2.all(100.0),
-            anchor: Anchor.center);
+          position: Vector2(0, 0),
+          size: Vector2.all(100.0),
+          anchor: Anchor.center,
+          priority: 10,
+        );
 
   late Sprite _dashSprite;
-  final Vector2 _gravity = Vector2(0, 900.0);
+  final Vector2 _gravity = Vector2(0, 1400.0);
   Vector2 _velocity = Vector2(0, 0);
-  final Vector2 _jumpForce = Vector2(0, -400);
+  final Vector2 _jumpForce = Vector2(0, -500);
 
   @override
   FutureOr<void> onLoad() async {
@@ -26,8 +29,8 @@ class Dash extends PositionComponent {
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    // _velocity += _gravity * dt;
-    // position += _velocity * dt;
+    _velocity += _gravity * dt;
+    position += _velocity * dt;
   }
 
   void jump() {

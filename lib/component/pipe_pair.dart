@@ -7,9 +7,11 @@ class PipePair extends PositionComponent {
   PipePair({
     required super.position,
     this.gap = 200.0,
+    this.speed = 200.0,
   });
 
   final double gap;
+  final double speed;
   @override
   void onLoad() {
     // TODO: implement onLoad
@@ -18,5 +20,13 @@ class PipePair extends PositionComponent {
       Pipe(isFlipped: false, position: Vector2(0, gap/ 2)),
       Pipe(isFlipped: true, position: Vector2(0, -gap /2)),
     ]);
+  }
+
+  @override
+  void update(double dt) {
+    // TODO: implement update
+    position.x -= speed *dt;
+    super.update(dt);
+
   }
 }
