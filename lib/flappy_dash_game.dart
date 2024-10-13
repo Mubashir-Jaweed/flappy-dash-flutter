@@ -9,12 +9,11 @@ import 'package:flame/palette.dart';
 import 'package:flame/parallax.dart';
 import 'package:flappydash/component/dash.dart';
 import 'package:flappydash/component/dash_parallax_background.dart';
-import 'package:flappydash/component/pipe.dart';
 import 'package:flappydash/component/pipe_pair.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class FlappyDashGame extends FlameGame<FlappyDashWorld> with KeyboardEvents {
+class FlappyDashGame extends FlameGame<FlappyDashWorld> with KeyboardEvents,HasCollisionDetection {
   FlappyDashGame()
       : super(
           world: FlappyDashWorld(),
@@ -50,7 +49,7 @@ class FlappyDashWorld extends World with TapCallbacks, HasGameRef<FlappyDashGame
   @override
   void onLoad() {
     super.onLoad();
-    add(DashParallaxBackground());
+    // add(DashParallaxBackground());
     add(_dash = Dash());
     _generatePipes();
   }

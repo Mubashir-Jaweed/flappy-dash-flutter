@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flappydash/component/hidden_coin.dart';
 import 'package:flappydash/component/pipe.dart';
 
 class PipePair extends PositionComponent {
   PipePair({
     required super.position,
-    this.gap = 200.0,
+    this.gap = 300.0,
     this.speed = 200.0,
   });
 
@@ -17,16 +18,22 @@ class PipePair extends PositionComponent {
     // TODO: implement onLoad
     super.onLoad();
     addAll([
-      Pipe(isFlipped: false, position: Vector2(0, gap/ 2)),
-      Pipe(isFlipped: true, position: Vector2(0, -gap /2)),
+      Pipe(
+        isFlipped: false,
+        position: Vector2(0, gap / 2),
+      ),
+      Pipe(
+        isFlipped: true,
+        position: Vector2(0, -gap / 2),
+      ),
+      HiddenCoin(position: Vector2(0, 0))
     ]);
   }
 
   @override
   void update(double dt) {
     // TODO: implement update
-    position.x -= speed *dt;
+    position.x -= speed * dt;
     super.update(dt);
-
   }
 }

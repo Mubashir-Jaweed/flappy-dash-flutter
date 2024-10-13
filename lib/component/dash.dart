@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +24,22 @@ class Dash extends PositionComponent {
   FutureOr<void> onLoad() async {
     await super.onLoad();
     _dashSprite = await Sprite.load('dash.png');
+    debugMode = true;
+    final radius = size.x / 2;
+    final center = size / 2;
+    add(CircleHitbox(
+      radius: radius * 0.79,
+      position: center * 1.1,
+      anchor: Anchor.center,
+    ));
   }
 
   @override
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    _velocity += _gravity * dt;
-    position += _velocity * dt;
+    // _velocity += _gravity * dt;
+    // position += _velocity * dt;
   }
 
   void jump() {
