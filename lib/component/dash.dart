@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
+import 'package:flappydash/component/hidden_coin.dart';
+import 'package:flappydash/component/pipe.dart';
+import 'package:flappydash/flappy_dash_game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class Dash extends PositionComponent {
+class Dash extends PositionComponent with CollisionCallbacks, HasGameRef<FlappyDashGame>{
   Dash()
       : super(
           position: Vector2(0, 0),
@@ -24,7 +28,6 @@ class Dash extends PositionComponent {
   FutureOr<void> onLoad() async {
     await super.onLoad();
     _dashSprite = await Sprite.load('dash.png');
-    debugMode = true;
     final radius = size.x / 2;
     final center = size / 2;
     add(CircleHitbox(
@@ -38,8 +41,8 @@ class Dash extends PositionComponent {
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    // _velocity += _gravity * dt;
-    // position += _velocity * dt;
+    _velocity += _gravity * dt;
+    position += _velocity * dt;
   }
 
   void jump() {
@@ -54,5 +57,19 @@ class Dash extends PositionComponent {
       canvas,
       size: size,
     );
+  }
+
+
+    @override
+  void onCollision(Set<Vector2> points, PositionComponent other) {
+    super.onCollision(points,other);
+
+    if(other is HiddenCoin){
+      game.world.increaseScore();
+      other.removeFromParent();
+    }else if(other is Pipe){
+      log("Game Over ...................");
+    }
+   
   }
 }

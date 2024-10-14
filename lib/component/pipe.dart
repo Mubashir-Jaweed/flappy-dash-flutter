@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 class Pipe extends PositionComponent {
@@ -24,6 +25,8 @@ class Pipe extends PositionComponent {
     if (isFlipped) {
       flipVertically();
     }
+
+    add(RectangleHitbox());
   }
 
   @override

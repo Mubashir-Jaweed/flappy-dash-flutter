@@ -7,7 +7,7 @@ import 'package:flappydash/component/pipe.dart';
 class PipePair extends PositionComponent {
   PipePair({
     required super.position,
-    this.gap = 300.0,
+    this.gap = 250.0,
     this.speed = 200.0,
   });
 
@@ -15,7 +15,6 @@ class PipePair extends PositionComponent {
   final double speed;
   @override
   void onLoad() {
-    // TODO: implement onLoad
     super.onLoad();
     addAll([
       Pipe(
@@ -26,7 +25,7 @@ class PipePair extends PositionComponent {
         isFlipped: true,
         position: Vector2(0, -gap / 2),
       ),
-      HiddenCoin(position: Vector2(0, 0))
+      HiddenCoin(position: Vector2(30, 0))
     ]);
   }
 

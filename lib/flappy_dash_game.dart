@@ -13,7 +13,8 @@ import 'package:flappydash/component/pipe_pair.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class FlappyDashGame extends FlameGame<FlappyDashWorld> with KeyboardEvents,HasCollisionDetection {
+class FlappyDashGame extends FlameGame<FlappyDashWorld>
+    with KeyboardEvents, HasCollisionDetection {
   FlappyDashGame()
       : super(
           world: FlappyDashWorld(),
@@ -41,10 +42,13 @@ class FlappyDashGame extends FlameGame<FlappyDashWorld> with KeyboardEvents,HasC
   }
 }
 
-class FlappyDashWorld extends World with TapCallbacks, HasGameRef<FlappyDashGame> {
+class FlappyDashWorld extends World
+    with TapCallbacks, HasGameRef<FlappyDashGame> {
   late Dash _dash;
   late PipePair _lastPipe;
   static const _pipesDistance = 400.0;
+  int _score = 0;
+  late TextComponent _scoreText;
 
   @override
   void onLoad() {
@@ -52,6 +56,12 @@ class FlappyDashWorld extends World with TapCallbacks, HasGameRef<FlappyDashGame
     // add(DashParallaxBackground());
     add(_dash = Dash());
     _generatePipes();
+    game.camera.viewfinder.add(
+      _scoreText =  TextComponent(
+        text: _score.toString(),
+        position: Vector2(0, -(game.size.y / 2)),
+      ),
+    );
   }
 
   void _generatePipes({
@@ -72,17 +82,15 @@ class FlappyDashWorld extends World with TapCallbacks, HasGameRef<FlappyDashGame
 
   void _removePipes() {
     final pipes = children.whereType<PipePair>();
-    final shouldBeRemoved = max(pipes.length -5  , 0);
-    pipes.take(shouldBeRemoved).forEach((pipe){
+    final shouldBeRemoved = max(pipes.length - 5, 0);
+    pipes.take(shouldBeRemoved).forEach((pipe) {
       pipe.removeFromParent();
     });
     print(pipes.length);
   }
 
-
   @override
   void onTapDown(TapDownEvent event) {
-    // TODO: implement onTapDown
     super.onTapDown(event);
     _dash.jump();
   }
@@ -91,17 +99,19 @@ class FlappyDashWorld extends World with TapCallbacks, HasGameRef<FlappyDashGame
     _dash.jump();
   }
 
+  void increaseScore() {
+    _score += 1;
+  }
+
   @override
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    if(_dash.x >= _lastPipe.x){
-      _generatePipes(
-        fromX: _pipesDistance
-      );
+    _scoreText.text = _score.toString();
+    if (_dash.x >= _lastPipe.x) {
+      _generatePipes(fromX: _pipesDistance);
       _removePipes();
     }
     // game.camera.viewfinder.zoom = 0.05;
   }
-  
 }
