@@ -7,6 +7,8 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame/parallax.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flappydash/bloc/cubit/game_cubit.dart';
 import 'package:flappydash/component/dash.dart';
 import 'package:flappydash/component/dash_parallax_background.dart';
 import 'package:flappydash/component/pipe_pair.dart';
@@ -15,7 +17,7 @@ import 'package:flutter/services.dart';
 
 class FlappyDashGame extends FlameGame<FlappyDashWorld>
     with KeyboardEvents, HasCollisionDetection {
-  FlappyDashGame()
+  FlappyDashGame(this.gameCubit)
       : super(
           world: FlappyDashWorld(),
           camera: CameraComponent.withFixedResolution(
@@ -23,6 +25,8 @@ class FlappyDashGame extends FlameGame<FlappyDashWorld>
             height: 1150,
           ),
         );
+
+  final GameCubit gameCubit;
 
   @override
   KeyEventResult onKeyEvent(
@@ -42,23 +46,40 @@ class FlappyDashGame extends FlameGame<FlappyDashWorld>
   }
 }
 
-class FlappyDashWorld extends World
-    with TapCallbacks, HasGameRef<FlappyDashGame> {
-  late Dash _dash;
-  late PipePair _lastPipe;
-  static const _pipesDistance = 400.0;
-  int _score = 0;
-  late TextComponent _scoreText;
+class FlappyDashWorld extends World with HasGameRef<FlappyDashGame> {
+  late FlappyDashRootComponent _rootComponent;
 
   @override
   void onLoad() {
     super.onLoad();
-    // add(DashParallaxBackground());
+    add(
+      FlameBlocProvider<GameCubit,GameState>(
+        create: () => game.gameCubit,
+        children: [
+          _rootComponent = FlappyDashRootComponent(),
+        ],
+      ),
+    );
+  }
+
+  void onSpaceDown() => _rootComponent.onSpaceDown();
+}
+
+class FlappyDashRootComponent extends Component
+    with TapCallbacks, HasGameRef<FlappyDashGame>,FlameBlocReader<GameCubit,GameState> {
+  late Dash _dash;
+  late PipePair _lastPipe;
+  static const _pipesDistance = 400.0;
+  late TextComponent _scoreText;
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(DashParallaxBackground());
     add(_dash = Dash());
     _generatePipes();
     game.camera.viewfinder.add(
-      _scoreText =  TextComponent(
-        text: _score.toString(),
+      _scoreText = TextComponent(
         position: Vector2(0, -(game.size.y / 2)),
       ),
     );
@@ -99,15 +120,13 @@ class FlappyDashWorld extends World
     _dash.jump();
   }
 
-  void increaseScore() {
-    _score += 1;
-  }
 
   @override
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    _scoreText.text = _score.toString();
+    
+    _scoreText.text = bloc.state.currentScore.toString();
     if (_dash.x >= _lastPipe.x) {
       _generatePipes(fromX: _pipesDistance);
       _removePipes();
