@@ -46,14 +46,15 @@ class FlappyDashGame extends FlameGame<FlappyDashWorld>
   }
 }
 
-class FlappyDashWorld extends World with HasGameRef<FlappyDashGame> {
+class FlappyDashWorld extends World
+    with TapCallbacks, HasGameRef<FlappyDashGame> {
   late FlappyDashRootComponent _rootComponent;
 
   @override
   void onLoad() {
     super.onLoad();
     add(
-      FlameBlocProvider<GameCubit,GameState>(
+      FlameBlocProvider<GameCubit, GameState>(
         create: () => game.gameCubit,
         children: [
           _rootComponent = FlappyDashRootComponent(),
@@ -63,10 +64,15 @@ class FlappyDashWorld extends World with HasGameRef<FlappyDashGame> {
   }
 
   void onSpaceDown() => _rootComponent.onSpaceDown();
+  @override
+  void onTapDown(TapDownEvent event) {
+    super.onTapDown(event);
+    _rootComponent.onTapDown(event);
+  }
 }
 
 class FlappyDashRootComponent extends Component
-    with TapCallbacks, HasGameRef<FlappyDashGame>,FlameBlocReader<GameCubit,GameState> {
+    with HasGameRef<FlappyDashGame>, FlameBlocReader<GameCubit, GameState> {
   late Dash _dash;
   late PipePair _lastPipe;
   static const _pipesDistance = 400.0;
@@ -110,22 +116,27 @@ class FlappyDashRootComponent extends Component
     print(pipes.length);
   }
 
-  @override
-  void onTapDown(TapDownEvent event) {
-    super.onTapDown(event);
-    _dash.jump();
-  }
-
   void onSpaceDown() {
+    _checkToStart();
     _dash.jump();
   }
 
+  void onTapDown(TapDownEvent event) {
+    _checkToStart();
+    _dash.jump();
+  }
+
+  void _checkToStart() {
+    if(bloc.state.currentPlayingState == PlayingState.none){
+      bloc.startPlaying();
+    }
+  }
 
   @override
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    
+
     _scoreText.text = bloc.state.currentScore.toString();
     if (_dash.x >= _lastPipe.x) {
       _generatePipes(fromX: _pipesDistance);

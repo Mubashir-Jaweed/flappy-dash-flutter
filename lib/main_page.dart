@@ -25,9 +25,13 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GameWidget(
-        game: _flappyDashGame,
-      ),
-    );
+        body: Stack(
+      children: [
+        GameWidget(game: _flappyDashGame),
+        Container(
+          color: Colors.black45,
+        )
+      ],
+    ));
   }
 }

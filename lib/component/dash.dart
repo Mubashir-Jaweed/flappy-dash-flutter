@@ -43,11 +43,17 @@ class Dash extends PositionComponent with CollisionCallbacks, HasGameRef<FlappyD
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
+     if (bloc.state.currentPlayingState != PlayingState.playing) {
+      return;
+    }
     _velocity += _gravity * dt;
     position += _velocity * dt;
   }
 
   void jump() {
+    if(bloc.state.currentPlayingState != PlayingState.playing){
+      return;
+    }
     _velocity = _jumpForce;
   }
 
