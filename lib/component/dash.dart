@@ -43,7 +43,7 @@ class Dash extends PositionComponent with CollisionCallbacks, HasGameRef<FlappyD
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-     if (bloc.state.currentPlayingState != PlayingState.playing) {
+     if (bloc.state.currentPlayingState.isNotPlaying) {
       return;
     }
     _velocity += _gravity * dt;
@@ -51,7 +51,7 @@ class Dash extends PositionComponent with CollisionCallbacks, HasGameRef<FlappyD
   }
 
   void jump() {
-    if(bloc.state.currentPlayingState != PlayingState.playing){
+    if(bloc.state.currentPlayingState.isNotPlaying){
       return;
     }
     _velocity = _jumpForce;
@@ -69,9 +69,9 @@ class Dash extends PositionComponent with CollisionCallbacks, HasGameRef<FlappyD
 
 
     @override
-  void onCollision(Set<Vector2> points, PositionComponent other) {
-    super.onCollision(points,other);
-    if(bloc.state.currentPlayingState != PlayingState.playing){
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints,other);
+    if(bloc.state.currentPlayingState.isNotPlaying){
       return;
     }
     if(other is HiddenCoin){

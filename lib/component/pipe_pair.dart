@@ -39,7 +39,7 @@ class PipePair extends PositionComponent
         break;
       case PlayingState.gameOver:
         break;
-      case PlayingState.none:
+      case PlayingState.idle:
         break;
 
       case PlayingState.playing:
