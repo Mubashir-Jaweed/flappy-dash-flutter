@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flappy Dash',
         debugShowCheckedModeBanner: false,
-        home: MainPage(),
+        theme: ThemeData(fontFamily: 'Chewy'),
+        home: const MainPage(),
       ),
     );
   }

@@ -24,7 +24,7 @@ class GameCubit extends Cubit<GameState> {
     );
   }
 
-   void gameOver() {
+  void gameOver() {
     emit(
       state.copyWith(
         currentPlayingState: PlayingState.gameOver,
@@ -32,5 +32,10 @@ class GameCubit extends Cubit<GameState> {
     );
   }
 
-
+  restartGame() {
+    emit(state.copyWith(
+      currentPlayingState: PlayingState.none,
+      currentScore: 0,
+    ));
+  }
 }

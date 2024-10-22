@@ -71,7 +71,9 @@ class Dash extends PositionComponent with CollisionCallbacks, HasGameRef<FlappyD
     @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
     super.onCollision(points,other);
-
+    if(bloc.state.currentPlayingState != PlayingState.playing){
+      return;
+    }
     if(other is HiddenCoin){
       bloc.increaseScore();
       other.removeFromParent();
