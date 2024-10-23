@@ -1,13 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flappydash/audio_helper.dart';
 import 'package:meta/meta.dart';
 
 part 'game_state.dart';
 
 class GameCubit extends Cubit<GameState> {
-  GameCubit() : super(const GameState());
+  GameCubit(this._audioHelper,) : super(const GameState());
+
+  final AudioHelper _audioHelper;
 
   void startPlaying() {
+    _audioHelper.playBackgroundAudio();
     emit(
       state.copyWith(
         currentPlayingState: PlayingState.playing,
@@ -17,6 +21,8 @@ class GameCubit extends Cubit<GameState> {
   }
 
   void increaseScore() {
+    _audioHelper.playScroreCollectSound();
+
     emit(
       state.copyWith(
         currentScore: state.currentScore + 1,
@@ -25,6 +31,8 @@ class GameCubit extends Cubit<GameState> {
   }
 
   void gameOver() {
+    _audioHelper.stopBackgroundAudio();
+
     emit(
       state.copyWith(
         currentPlayingState: PlayingState.gameOver,
@@ -32,7 +40,7 @@ class GameCubit extends Cubit<GameState> {
     );
   }
 
-  restartGame() {
+  void restartGame() {
     emit(state.copyWith(
       currentPlayingState: PlayingState.idle,
       currentScore: 0,

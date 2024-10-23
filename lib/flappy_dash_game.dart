@@ -8,11 +8,13 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flappydash/audio_helper.dart';
 import 'package:flappydash/bloc/cubit/game_cubit.dart';
 import 'package:flappydash/component/dash.dart';
 import 'package:flappydash/component/dash_parallax_background.dart';
 import 'package:flappydash/component/flappy_dash_root_component.dart';
 import 'package:flappydash/component/pipe_pair.dart';
+import 'package:flappydash/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -52,8 +54,9 @@ class FlappyDashWorld extends World
   late FlappyDashRootComponent _rootComponent;
 
   @override
-  void onLoad() {
+  void onLoad() async{
     super.onLoad();
+    await getIt.get<AudioHelper>().initialize();
     add(
       FlameBlocProvider<GameCubit, GameState>(
         create: () => game.gameCubit,
