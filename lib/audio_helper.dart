@@ -1,4 +1,3 @@
-
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 class AudioHelper {
@@ -22,7 +21,7 @@ class AudioHelper {
     _soLoud.setProtectVoice(_playingBackground!, true);
   }
 
-  void stopBackgroundAudio()  {
+  void stopBackgroundAudio() {
     if (_playingBackground == null) {
       return;
     }
@@ -34,7 +33,7 @@ class AudioHelper {
     );
   }
 
-   void playScroreCollectSound() async {
+  void playScroreCollectSound() async {
     await _soLoud.play(_scoreSource);
   }
 }
